@@ -3,24 +3,17 @@
 //  RMDB
 //
 //  Created by Sharrar Wasit on 12/22/21.
-//
+//  NOTE: Keeping the ViewModel in the controller file for the team's convenience to look at! @Clover
 
 import UIKit
 import Kingfisher
 
-
 //Dictionary to hold character locations, keyed by its URL. Acts as local cache
-var locationDict: Dictionary<String, RMLocation> = [:]
+private var locationDict: Dictionary<String, LocationModel> = [:]
 
 struct DetailViewModel {
     
     var character: CharacterModel
-    
-    func getLocation() {
-        if !(locationDict[self.character.location.url] == nil) {
-            print("Found in cache")
-        }
-            }
     
     func getCharacterLocation(_ completionHandler: @escaping () -> Void) {
         
@@ -43,8 +36,6 @@ struct DetailViewModel {
 
 class DetailViewController: UIViewController {
     
-
-    
     private var image : UIImageView!
     private var name : UILabel!
     private var dimension : UILabel!
@@ -56,6 +47,7 @@ class DetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Programatically draw UI
         setupUI()
         
         // Download/Cache image using Kingfisher
@@ -65,16 +57,18 @@ class DetailViewController: UIViewController {
         vm.getCharacterLocation {
             DispatchQueue.main.async { [weak self] in
                 guard let self = self else { return }
+                
                 self.name.text = locationDict[self.vm.character.location.url]?.name
                 self.dimension.text = "\(locationDict[self.vm.character.location.url]!.dimension)"
                 self.resdidentCount.text = "Resident Count: \(locationDict[self.vm.character.location.url]!.residents.count)"
-                print(locationDict.count)
             }
         }
-        
     }
     
+    
+    
     // MARK: UI Configurations
+    
     private func setupUI() {
         image = UIImageView()
         name = UILabel()

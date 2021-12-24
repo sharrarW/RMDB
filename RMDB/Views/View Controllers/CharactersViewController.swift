@@ -3,7 +3,7 @@
 //  RMDB
 //
 //  Created by Sharrar Wasit on 12/21/21.
-//
+//  NOTE: Keeping the ViewModel in the controller file for the team's convenience to look at! @Clover
 
 import UIKit
 
@@ -24,8 +24,8 @@ class CharactersViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
         
+        // Gets data through View Model, then updates table view on main thread
         vm.fetchCharacters { [weak self] in
             DispatchQueue.main.async {
                 self?.tableView.reloadData()
@@ -33,14 +33,18 @@ class CharactersViewController: UITableViewController {
         }
     }
     
+    // Loads detailViewController before switching to it
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if (segue.identifier == "showDetails") {
             guard let viewController = segue.destination as? DetailViewController, let character = sender as? CharacterModel else { return }
             viewController.vm = DetailViewModel(character: character)
-            
         }
     }
 }
+
+
+
+// MARK: Tableview Datasource
 
 extension CharactersViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -56,10 +60,14 @@ extension CharactersViewController {
     }
 }
 
+
+
+// MARK: Tableview Delegates
+
 extension CharactersViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        // switch to new controller, load image and get location, location details
         
+        // Switch to new controller, which loads image and gets location + location details
         performSegue(withIdentifier: "showDetails", sender: vm.characters[indexPath.row])
     }
 }

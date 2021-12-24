@@ -43,12 +43,12 @@ struct NetworkManager {
         }
     }
     
-    func getCharacterLocation(character: CharacterModel, _ completionHandler: @escaping (RMLocation) -> Void ) {
+    func getCharacterLocation(character: CharacterModel, _ completionHandler: @escaping (LocationModel) -> Void ) {
         print("Retrieving character location")
         guard let locationUrl = URL(string: character.location.url) else { return }
         downloadData(url: locationUrl) { (returnedData) in
             if let data = returnedData {
-                guard let location = try? JSONDecoder().decode(RMLocation.self, from: data) else { print("download failed")
+                guard let location = try? JSONDecoder().decode(LocationModel.self, from: data) else { print("download failed")
                     return }
                 
                 print("Parsed Location JSON data")
