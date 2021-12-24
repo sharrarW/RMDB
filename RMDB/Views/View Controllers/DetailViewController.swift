@@ -39,6 +39,7 @@ class DetailViewController: UIViewController {
     private var image : UIImageView!
     private var name : UILabel!
     private var dimension : UILabel!
+    private var type : UILabel!
     private var resdidentCount : UILabel!
     private var locationStackView: UIStackView!
     
@@ -60,6 +61,7 @@ class DetailViewController: UIViewController {
                 
                 self.name.text = locationDict[self.vm.character.location.url]?.name
                 self.dimension.text = "\(locationDict[self.vm.character.location.url]!.dimension)"
+                self.type.text = locationDict[self.vm.character.location.url]?.type
                 self.resdidentCount.text = "Resident Count: \(locationDict[self.vm.character.location.url]!.residents.count)"
             }
         }
@@ -73,13 +75,16 @@ class DetailViewController: UIViewController {
         image = UIImageView()
         name = UILabel()
         dimension = UILabel()
+        type = UILabel()
         resdidentCount = UILabel()
         locationStackView = UIStackView()
         
         locationStackView.axis = .horizontal
         locationStackView.distribution = .fillEqually
+        locationStackView.alignment = .center
         locationStackView.spacing = 10
         locationStackView.addArrangedSubview(dimension)
+        locationStackView.addArrangedSubview(type)
         locationStackView.addArrangedSubview(resdidentCount)
         
         view.addSubview(image)
@@ -125,7 +130,7 @@ class DetailViewController: UIViewController {
         name.textAlignment = .center
         name.numberOfLines = 1
         
-        dimension.numberOfLines = 1
+        dimension.numberOfLines = 2
         dimension.adjustsFontSizeToFitWidth = true
         dimension.minimumScaleFactor = 0.5
         
