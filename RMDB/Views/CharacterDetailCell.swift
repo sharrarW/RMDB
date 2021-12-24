@@ -18,8 +18,8 @@ class CharacterDetailCell: UITableViewCell {
             guard let character = character else { return }
             
             nameLabel.text = character.name
-            speciesLabel.text = character.species
-            statusLabel.text = character.status
+            speciesLabel.text = "Species: \(character.species)"
+            statusLabel.text = "Status: \(character.status)"
             
         }
     }

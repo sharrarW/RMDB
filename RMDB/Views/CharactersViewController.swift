@@ -32,7 +32,14 @@ class CharactersViewController: UITableViewController {
             }
         }
     }
-
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if (segue.identifier == "showDetails") {
+            guard let viewController = segue.destination as? DetailViewController, let character = sender as? CharacterModel else { return }
+            viewController.vm = DetailViewModel(character: character)
+            
+        }
+    }
 }
 
 extension CharactersViewController {
@@ -46,6 +53,14 @@ extension CharactersViewController {
         }
         cell.character = vm.characters[indexPath.row]
         return cell
+    }
+}
+
+extension CharactersViewController {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        // switch to new controller, load image and get location, location details
+        
+        performSegue(withIdentifier: "showDetails", sender: vm.characters[indexPath.row])
     }
 }
 
