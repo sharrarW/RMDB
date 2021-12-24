@@ -24,11 +24,13 @@ struct DetailViewModel {
     
     func getCharacterLocation(_ completionHandler: @escaping () -> Void) {
         
+        // Check if location's stored in cache, keyed by URL (was already downloaded)
         if !(locationDict[self.character.location.url] == nil) {
             print("Found location in cache!")
             completionHandler()
         }
         
+        // Otherwise download and store in cache
         else {
             NetworkManager.shared.getCharacterLocation(character: character) { (location) in
                 locationDict[self.character.location.url] = location
@@ -47,7 +49,7 @@ class DetailViewController: UIViewController {
     private var name : UILabel!
     private var dimension : UILabel!
     private var resdidentCount : UILabel!
-    private var actionStackView: UIStackView!
+    private var locationStackView: UIStackView!
     
     var vm: DetailViewModel!
     
@@ -56,6 +58,7 @@ class DetailViewController: UIViewController {
         
         setupUI()
         
+        // Download/Cache image using Kingfisher
         let url = URL(string: vm.character.image)
         image.kf.setImage(with: url)
         
@@ -71,24 +74,23 @@ class DetailViewController: UIViewController {
         
     }
     
+    // MARK: UI Configurations
     private func setupUI() {
         image = UIImageView()
         name = UILabel()
         dimension = UILabel()
         resdidentCount = UILabel()
-        actionStackView = UIStackView()
+        locationStackView = UIStackView()
+        
+        locationStackView.axis = .horizontal
+        locationStackView.distribution = .fillEqually
+        locationStackView.spacing = 10
+        locationStackView.addArrangedSubview(dimension)
+        locationStackView.addArrangedSubview(resdidentCount)
         
         view.addSubview(image)
         view.addSubview(name)
-        view.addSubview(actionStackView)
-        
-        actionStackView.axis = .horizontal
-        actionStackView.distribution = .fillEqually
-        actionStackView.spacing = 10
-        
-        
-        actionStackView.addArrangedSubview(dimension)
-        actionStackView.addArrangedSubview(resdidentCount)
+        view.addSubview(locationStackView)
         
         styleUI()
         configureAutoLayout()
@@ -99,7 +101,7 @@ class DetailViewController: UIViewController {
         name.translatesAutoresizingMaskIntoConstraints = false
         dimension.translatesAutoresizingMaskIntoConstraints = false
         resdidentCount.translatesAutoresizingMaskIntoConstraints = false
-        actionStackView.translatesAutoresizingMaskIntoConstraints = false
+        locationStackView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             image.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 5),
@@ -108,19 +110,17 @@ class DetailViewController: UIViewController {
             image.heightAnchor.constraint(equalToConstant: 250),
             image.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
             
+            name.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 10),
+            name.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: 10),
             name.topAnchor.constraint(equalTo: image.bottomAnchor, constant: 25),
             name.centerXAnchor.constraint(equalTo: image.centerXAnchor),
             
-            actionStackView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: 5),
-            actionStackView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 5),
+            resdidentCount.rightAnchor.constraint(equalTo: locationStackView.rightAnchor),
             
-            resdidentCount.rightAnchor.constraint(equalTo: actionStackView.rightAnchor),
-            
-            actionStackView.topAnchor.constraint(equalTo: name.bottomAnchor, constant: 30),
-            actionStackView.centerXAnchor.constraint(equalTo: name.centerXAnchor),
-            
-            
-            
+            locationStackView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: 5),
+            locationStackView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 5),
+            locationStackView.topAnchor.constraint(equalTo: name.bottomAnchor, constant: 30),
+            locationStackView.centerXAnchor.constraint(equalTo: name.centerXAnchor),
         ])
     }
     
@@ -129,7 +129,7 @@ class DetailViewController: UIViewController {
         name.adjustsFontSizeToFitWidth = true
         name.minimumScaleFactor = 0.5
         name.textAlignment = .center
-        name.numberOfLines = 10
+        name.numberOfLines = 1
         
         dimension.numberOfLines = 1
         dimension.adjustsFontSizeToFitWidth = true
