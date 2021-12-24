@@ -16,10 +16,25 @@ struct DetailViewModel {
     
     var character: CharacterModel
     
+    func getLocation() {
+        if !(locationDict[self.character.location.url] == nil) {
+            print("Found in cache")
+        }
+            }
+    
     func getCharacterLocation(_ completionHandler: @escaping () -> Void) {
-        NetworkManager.shared.getCharacterLocation(character: character) { (location) in
-            locationDict[self.character.location.url] = location
+        
+        if !(locationDict[self.character.location.url] == nil) {
+            print("Found location in cache!")
             completionHandler()
+        }
+        
+        else {
+            NetworkManager.shared.getCharacterLocation(character: character) { (location) in
+                locationDict[self.character.location.url] = location
+                print("Downloading location ...")
+                completionHandler()
+            }
         }
     }
 }
@@ -53,6 +68,7 @@ class DetailViewController: UIViewController {
                 print(locationDict.count)
             }
         }
+        
     }
     
     private func setupUI() {
