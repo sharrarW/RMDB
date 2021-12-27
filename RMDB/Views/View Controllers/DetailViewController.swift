@@ -35,105 +35,109 @@ struct DetailViewModel {
 }
 
 class DetailViewController: UIViewController {
+
+    private var locationName: UILabel = UILabel(text: "Unavailable")
+    private var characterImage: UIImageView = UIImageView()
     
-    private var image : UIImageView!
-    private var name : UILabel!
-    private var dimension : UILabel!
-    private var type : UILabel!
-    private var resdidentCount : UILabel!
-    private var locationStackView: UIStackView!
+    // Dimension stack
+    private var dimensionSymbol: UIImageView?
+    private var title1: UILabel?
+    private var dimensionName: UILabel = UILabel(text: "N/A")
+    
+    // Type stack
+    private var typeSymbol: UIImageView?
+    private var title2: UILabel?
+    private var typeName: UILabel = UILabel(text: "N/A")
+    
+    // Population stack
+    private var populationSymbol: UIImageView?
+    private var title3: UILabel?
+    private var populationCount: UILabel = UILabel(text: "N/A")
+    
     
     var vm: DetailViewModel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Programatically draw UI
-        setupUI()
+        createElements()
+        setData()
+    }
+    
+    private func createElements() {
+        
+        dimensionSymbol = UIImageView(image: UIImage(systemName: "pyramid"))
+        title1 = UILabel(text: "Dimension".uppercased())
+        
+        typeSymbol = UIImageView(image: UIImage(systemName: "moon.stars"))
+        title2 = UILabel(text: "Type".uppercased())
+        
+        populationSymbol = UIImageView(image: UIImage(systemName: "person.3"))
+        title3 = UILabel(text: "Population".uppercased())
+        
+        // Create 3 Vertical Stacks
+        let dimensionVStack = UIStackView(axis: .vertical, views: [dimensionSymbol!, title1!, dimensionName],  alignment: .center, spacing: 5)
+        let typeVStack = UIStackView(axis: .vertical, views: [typeSymbol!, title2!, typeName], alignment: .center, spacing: 5)
+        let populationVStack = UIStackView(axis: .vertical, views: [populationSymbol!, title3!, populationCount], alignment: .center, spacing: 5)
+        
+        // Create parent Horizontal Stack for the VStacks
+        let detailsContainerHStack = UIStackView(axis: .horizontal, views: [dimensionVStack, typeVStack, populationVStack], spacing: 0)
+        
+        // MARK: Add Subviews
+        [characterImage, locationName, detailsContainerHStack].forEach{ view.addSubview($0) }
+        view.addSubview(detailsContainerHStack)
+        
+        // MARK: Style Elements
+        locationName.font = UIFont.systemFont(ofSize: 30, weight: .semibold)
+        locationName.adjustsFontSizeToFitWidth = true
+        locationName.numberOfLines = 1
+        locationName.minimumScaleFactor = 0.5
+        
+        // Style titles above symbols
+        [title1, title2, title3].forEach {$0?.font = UIFont.systemFont(ofSize: 15, weight: .semibold) }
+        
+        // Style SF symbols
+        [dimensionSymbol, typeSymbol, populationSymbol].forEach {
+            let config = UIImage.SymbolConfiguration(pointSize: 25, weight: .light, scale: .medium)
+            $0?.preferredSymbolConfiguration = config
+            $0?.tintColor = .black
+        }
+        // Style location details
+        [dimensionName, typeName, populationCount].forEach {
+            $0.font = UIFont.systemFont(ofSize: 20, weight: .regular)
+            $0.adjustsFontSizeToFitWidth = true
+            $0.textAlignment = .center
+            $0.minimumScaleFactor = 0.5
+            $0.numberOfLines = 2        }
+        
+        
+        // MARK: Configure Autolayout
+        characterImage.anchor(top: view.safeAreaLayoutGuide.topAnchor, bottom: nil, leading: view.safeAreaLayoutGuide.leadingAnchor, trailing: view.safeAreaLayoutGuide.trailingAnchor, padding: .init(top: 5, left: 20, bottom: 0, right: 20), size: .init(width: 0, height: 250))
+
+        locationName.anchor(top: characterImage.bottomAnchor, bottom: nil, leading: characterImage.leadingAnchor, trailing: characterImage.trailingAnchor, padding: .init(top: 15, left: 0, bottom: 0, right: 0))
+
+        detailsContainerHStack.anchor(top: view.safeAreaLayoutGuide.centerYAnchor, bottom: nil, leading: view.safeAreaLayoutGuide.leadingAnchor, trailing: view.safeAreaLayoutGuide.trailingAnchor)
+    }
+    
+    private func setData() {
         
         // Download/Cache image using Kingfisher
         let url = URL(string: vm.character.image)
-        image.kf.setImage(with: url)
+        characterImage.kf.setImage(with: url)
         
         vm.getCharacterLocation {
             DispatchQueue.main.async { [weak self] in
                 guard let self = self else { return }
                 
-                self.name.text = locationDict[self.vm.character.location.url]?.name
-                self.dimension.text = "\(locationDict[self.vm.character.location.url]!.dimension)"
-                self.type.text = locationDict[self.vm.character.location.url]?.type
-                self.resdidentCount.text = "Resident Count: \(locationDict[self.vm.character.location.url]!.residents.count)"
+                self.locationName.text = locationDict[self.vm.character.location.url]?.name
+                print("Set name!")
+                self.dimensionName.text = "\(locationDict[self.vm.character.location.url]!.dimension)"
+                self.typeName.text = locationDict[self.vm.character.location.url]?.type
+                self.populationCount.text = "\(locationDict[self.vm.character.location.url]!.residents.count)"
             }
         }
     }
     
-    
-    
-    // MARK: UI Configurations
-    
-    private func setupUI() {
-        image = UIImageView()
-        name = UILabel()
-        dimension = UILabel()
-        type = UILabel()
-        resdidentCount = UILabel()
-        locationStackView = UIStackView()
-        
-        locationStackView.axis = .horizontal
-        locationStackView.distribution = .fillEqually
-        locationStackView.alignment = .center
-        locationStackView.spacing = 10
-        locationStackView.addArrangedSubview(dimension)
-        locationStackView.addArrangedSubview(type)
-        locationStackView.addArrangedSubview(resdidentCount)
-        
-        view.addSubview(image)
-        view.addSubview(name)
-        view.addSubview(locationStackView)
-        
-        styleUI()
-        configureAutoLayout()
     }
-    
-    private func configureAutoLayout() {
-        image.translatesAutoresizingMaskIntoConstraints = false
-        name.translatesAutoresizingMaskIntoConstraints = false
-        dimension.translatesAutoresizingMaskIntoConstraints = false
-        resdidentCount.translatesAutoresizingMaskIntoConstraints = false
-        locationStackView.translatesAutoresizingMaskIntoConstraints = false
-        
-        NSLayoutConstraint.activate([
-            image.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 5),
-            image.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
-            image.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
-            image.heightAnchor.constraint(equalToConstant: 250),
-            image.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
-            
-            name.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 10),
-            name.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: 10),
-            name.topAnchor.constraint(equalTo: image.bottomAnchor, constant: 25),
-            name.centerXAnchor.constraint(equalTo: image.centerXAnchor),
-            
-            resdidentCount.rightAnchor.constraint(equalTo: locationStackView.rightAnchor),
-            
-            locationStackView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: 5),
-            locationStackView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 5),
-            locationStackView.topAnchor.constraint(equalTo: name.bottomAnchor, constant: 30),
-            locationStackView.centerXAnchor.constraint(equalTo: name.centerXAnchor),
-        ])
-    }
-    
-    private func styleUI() {
-        name.font = UIFont.boldSystemFont(ofSize: 25)
-        name.adjustsFontSizeToFitWidth = true
-        name.minimumScaleFactor = 0.5
-        name.textAlignment = .center
-        name.numberOfLines = 1
-        
-        dimension.numberOfLines = 2
-        dimension.adjustsFontSizeToFitWidth = true
-        dimension.minimumScaleFactor = 0.5
-        
-        resdidentCount.numberOfLines = 0
-    }
-}
+
+

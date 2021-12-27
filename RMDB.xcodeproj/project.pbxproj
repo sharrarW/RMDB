@@ -19,6 +19,7 @@
 		2FBB2EA22773E0BC0022BA95 /* CharacterDetailCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FBB2EA12773E0BC0022BA95 /* CharacterDetailCell.swift */; };
 		2FBB2EA52773E53F0022BA95 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FBB2EA42773E53F0022BA95 /* DetailViewController.swift */; };
 		2FBB2EAB27741FCA0022BA95 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 2FBB2EAA27741FCA0022BA95 /* Kingfisher */; };
+		2FEE8AA62776F1820083DDB5 /* UIVIewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FEE8AA52776F1820083DDB5 /* UIVIewExtensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,6 +36,7 @@
 		2FBB2E792773AB610022BA95 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		2FBB2EA12773E0BC0022BA95 /* CharacterDetailCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterDetailCell.swift; sourceTree = "<group>"; };
 		2FBB2EA42773E53F0022BA95 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
+		2FEE8AA52776F1820083DDB5 /* UIVIewExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIVIewExtensions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,6 +70,7 @@
 		2FBB2E49277298D30022BA95 /* RMDB */ = {
 			isa = PBXGroup;
 			children = (
+				2FEE8AA42776F1680083DDB5 /* Extensions */,
 				2FBB2EAF277556E50022BA95 /* Services */,
 				2FBB2E762773A1950022BA95 /* Views */,
 				2FBB2E632772B57C0022BA95 /* Models */,
@@ -114,6 +117,14 @@
 				2FBB2EA42773E53F0022BA95 /* DetailViewController.swift */,
 			);
 			path = "View Controllers";
+			sourceTree = "<group>";
+		};
+		2FEE8AA42776F1680083DDB5 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				2FEE8AA52776F1820083DDB5 /* UIVIewExtensions.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -194,6 +205,7 @@
 			files = (
 				2FBB2E612772AC190022BA95 /* CharacterModel.swift in Sources */,
 				2FBB2EA22773E0BC0022BA95 /* CharacterDetailCell.swift in Sources */,
+				2FEE8AA62776F1820083DDB5 /* UIVIewExtensions.swift in Sources */,
 				2FBB2E4F277298D30022BA95 /* CharactersViewController.swift in Sources */,
 				2FBB2E7A2773AB610022BA95 /* NetworkManager.swift in Sources */,
 				2FBB2E652772B7520022BA95 /* LocationModel.swift in Sources */,
